@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Bus Tracker</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+    </style>
+</head>
+<body>
+    <h1>Bus Locations</h1>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([60.45, 22.25], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        function updateBusLocations() {
+            axios.get('/bus-locations')
+                .then(function (response) {
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+                    response.data.forEach(function (location) {
+                        L.marker([location[0], location[1]]).addTo(map);
+                    });
+                });
+        }
+
+        setInterval(updateBusLocations, 6000);
+        updateBusLocations();
+    </script>
+</body>
+</html>
