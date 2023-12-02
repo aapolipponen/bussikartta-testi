@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, send_from_directory
 import requests
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.')
 
 def fetch_bus_locations(url):
     response = requests.get(url)
@@ -10,7 +11,7 @@ def fetch_bus_locations(url):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/bus-locations')
 def bus_locations():
