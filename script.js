@@ -14,14 +14,13 @@ function updateBusLocations() {
             busMarkers.forEach(marker => map.removeLayer(marker));
             busMarkers = [];
 
-            // Check if the response contains the expected data
+            // Process each vehicle in the response
             if (response.data && response.data.result && response.data.result.vehicles) {
                 var vehicles = response.data.result.vehicles;
 
-                // Iterate through the vehicles and create markers
-                for (var id in vehicles) {
-                    var bus = vehicles[id];
-                    var marker = L.marker([bus.latitude, bus.longitude]).addTo(map);
+                for (var vehicleId in vehicles) {
+                    var vehicle = vehicles[vehicleId];
+                    var marker = L.marker([vehicle.latitude, vehicle.longitude]).addTo(map);
                     busMarkers.push(marker);
                 }
             } else {
