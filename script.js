@@ -5,20 +5,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var busMarkers = [];
-
 function updateBusLocations() {
-    axios.get('http://data.foli.fi/siri/vm')
+    const targetUrl = 'http://data.foli.fi/siri/vm';
+
+    axios.get(targetUrl)
         .then(function (response) {
             // Clear existing markers
             busMarkers.forEach(marker => map.removeLayer(marker));
             busMarkers = [];
 
-            // Add new markers
-            var vehicles = response.data.result.vehicles;
-            for (var id in vehicles) {
-                var bus = vehicles[id];
-                var marker = L.marker([bus.latitude, bus.longitude]).addTo(map);
-                busMarkers.push(marker);
+            // Check if the response contains the expected data
+            if (response.data && response.data.result && response.data.result.vehicles) {
+                var vehicles = response.data.result.vehicles;
+
+                // Iterate through the vehicles and create markers
+                for (var id in vehicles) {
+                    var bus = vehicles[id];
+                    var marker = L.marker([bus.latitude, bus.longitude]).addTo(map);
+                    busMarkers.push(marker);
+                }
+            } else {
+                console.error('Unexpected response format:', response.data);
             }
         })
         .catch(function (error) {
