@@ -7,7 +7,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var busMarkers = [];
 
 function updateBusLocations() {
-    axios.get('http://data.foli.fi/siri/vm')
+    axios.get('https://data.foli.fi/siri/vm')
         .then(function (response) {
             // Clear existing markers
             busMarkers.forEach(marker => map.removeLayer(marker));
